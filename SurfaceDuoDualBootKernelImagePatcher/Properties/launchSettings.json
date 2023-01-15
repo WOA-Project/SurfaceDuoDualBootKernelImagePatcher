@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SurfaceDuoDualBootKernelImagePatcher": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Duo\\repos\\SurfaceDuoPkg\\ImageResources\\Zeta\\kernel\" \"D:\\Duo\\repos\\SurfaceDuoPkg\\ImageResources\\Zeta\\kernel.patched\" 1"
+    }
+  }
+}
