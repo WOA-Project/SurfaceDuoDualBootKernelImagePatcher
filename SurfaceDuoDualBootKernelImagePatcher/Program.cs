@@ -10,13 +10,28 @@
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Surface Duo Dual Boot Kernel Image Patcher v2.0.0.0");
+            Console.WriteLine("Copyright (c) 2021-2023 The DuoWoA authors");
+            Console.WriteLine();
+
             if (args.Length != 4)
             {
-                Console.WriteLine("Usage: <Kernel Image to Patch> <Patched Kernel Image Destination> <0: Epsilon, 1: Zeta> <UEFI FD Image>");
+                Console.WriteLine("Usage: <Kernel Image to Patch> <UEFI FD Image> <0: Epsilon, 1: Zeta> <Patched Kernel Image Destination>");
                 return;
             }
 
-            File.WriteAllBytes(args[1], PatchKernel(File.ReadAllBytes(args[0]), File.ReadAllBytes(args[3]), (SurfaceDuoProduct)uint.Parse(args[2])));
+            string originalImage = args[0];
+            string uefiImage = args[1];
+            SurfaceDuoProduct product = (SurfaceDuoProduct)uint.Parse(args[2]);
+            string outputImage = args[3];
+
+            Console.WriteLine($"Patching {originalImage} with {uefiImage} for {product} and saving to {outputImage}...");
+            Console.WriteLine();
+
+            File.WriteAllBytes(outputImage, PatchKernel(File.ReadAllBytes(originalImage), File.ReadAllBytes(uefiImage), product));
+
+            Console.WriteLine("Image successfully patched.");
+            Console.WriteLine($"Please find the newly made kernel image at {outputImage}");
         }
 
         static byte[] PatchKernel(byte[] kernelBuffer, byte[] uefiBuffer, SurfaceDuoProduct surfaceDuoProduct)
