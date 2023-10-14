@@ -10,21 +10,22 @@
     {
         static void Main(string[] args)
         {
-            if (args.Length != 3)
+            if (args.Length != 4)
             {
-                Console.WriteLine("Usage: <Kernel Image to Patch> <Patched Kernel Image Destination> <0: Epsilon, 1: Zeta>");
+                Console.WriteLine("Usage: <Kernel Image to Patch> <Patched Kernel Image Destination> <0: Epsilon, 1: Zeta> <UEFI FD Image>");
                 return;
             }
 
-            File.WriteAllBytes(args[1], PatchKernel(File.ReadAllBytes(args[0]), (SurfaceDuoProduct)uint.Parse(args[2])));
+            File.WriteAllBytes(args[1], PatchKernel(File.ReadAllBytes(args[0]), File.ReadAllBytes(args[3]), (SurfaceDuoProduct)uint.Parse(args[2])));
         }
 
-        static byte[] PatchKernel(byte[] kernelBuffer, SurfaceDuoProduct surfaceDuoProduct)
+        static byte[] PatchKernel(byte[] kernelBuffer, byte[] uefiBuffer, SurfaceDuoProduct surfaceDuoProduct)
         {
-            byte[] patchedKernelBuffer = new byte[kernelBuffer.Length];
+            byte[] patchedKernelBuffer = new byte[kernelBuffer.Length + uefiBuffer.Length];
 
             // Copy the original kernel first into the patched buffer
             Array.Copy(kernelBuffer, patchedKernelBuffer, kernelBuffer.Length);
+            Array.Copy(uefiBuffer, 0, patchedKernelBuffer, kernelBuffer.Length, uefiBuffer.Length);
 
             // Determine the loading offset of the kernel first,
             // we are either going to find a b instruction on the
@@ -123,7 +124,7 @@
             }
 
             // Finally, we add in the total kernel image size because we need to jump over!
-            uint kernelSize = (uint)patchedKernelBuffer.Length;
+            uint kernelSize = (uint)kernelBuffer.Length;
             byte[] kernelSizeBuffer = BitConverter.GetBytes(kernelSize);
             patchedKernelBuffer[0x30] = kernelSizeBuffer[0];
             patchedKernelBuffer[0x31] = kernelSizeBuffer[1];
