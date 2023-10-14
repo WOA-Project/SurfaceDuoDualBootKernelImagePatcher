@@ -69,27 +69,58 @@
             patchedKernelBuffer[2] = 0;
             patchedKernelBuffer[3] = 0x14;
 
-            // Now we need to fill in the stack base of our firmware
-            // Stack Base: 0x00000000 9FC00000 (64 bit!)
-            patchedKernelBuffer[0x20] = 0;
-            patchedKernelBuffer[0x21] = 0;
-            patchedKernelBuffer[0x22] = 0xC0;
-            patchedKernelBuffer[0x23] = 0x9F;
-            patchedKernelBuffer[0x24] = 0;
-            patchedKernelBuffer[0x25] = 0;
-            patchedKernelBuffer[0x26] = 0;
-            patchedKernelBuffer[0x27] = 0;
+            if (surfaceDuoProduct == SurfaceDuoProduct.Epsilon)
+            {
+                // Now we need to fill in the stack base of our firmware
+                // Stack Base: 0x00000000 9FC00000 (64 bit!)
+                patchedKernelBuffer[0x20] = 0;
+                patchedKernelBuffer[0x21] = 0;
+                patchedKernelBuffer[0x22] = 0xC0;
+                patchedKernelBuffer[0x23] = 0x9F;
+                patchedKernelBuffer[0x24] = 0;
+                patchedKernelBuffer[0x25] = 0;
+                patchedKernelBuffer[0x26] = 0;
+                patchedKernelBuffer[0x27] = 0;
 
-            // Then we need to fill in the stack size of our firmware
-            // Stack Base: 0x00000000 00300000 (64 bit!)
-            patchedKernelBuffer[0x28] = 0;
-            patchedKernelBuffer[0x29] = 0;
-            patchedKernelBuffer[0x2A] = 0x30;
-            patchedKernelBuffer[0x2B] = 0;
-            patchedKernelBuffer[0x2C] = 0;
-            patchedKernelBuffer[0x2D] = 0;
-            patchedKernelBuffer[0x2E] = 0;
-            patchedKernelBuffer[0x2F] = 0;
+                // Then we need to fill in the stack size of our firmware
+                // Stack Base: 0x00000000 00300000 (64 bit!)
+                patchedKernelBuffer[0x28] = 0;
+                patchedKernelBuffer[0x29] = 0;
+                patchedKernelBuffer[0x2A] = 0x30;
+                patchedKernelBuffer[0x2B] = 0;
+                patchedKernelBuffer[0x2C] = 0;
+                patchedKernelBuffer[0x2D] = 0;
+                patchedKernelBuffer[0x2E] = 0;
+                patchedKernelBuffer[0x2F] = 0;
+            }
+            else if (surfaceDuoProduct == SurfaceDuoProduct.Zeta)
+            {
+                // Now we need to fill in the stack base of our firmware
+                // Stack Base: 0x00000000 9FC41000 (64 bit!)
+                patchedKernelBuffer[0x20] = 0;
+                patchedKernelBuffer[0x21] = 0x10;
+                patchedKernelBuffer[0x22] = 0xC4;
+                patchedKernelBuffer[0x23] = 0x9F;
+                patchedKernelBuffer[0x24] = 0;
+                patchedKernelBuffer[0x25] = 0;
+                patchedKernelBuffer[0x26] = 0;
+                patchedKernelBuffer[0x27] = 0;
+
+                // Then we need to fill in the stack size of our firmware
+                // Stack Base: 0x00000000 002BF000 (64 bit!)
+                patchedKernelBuffer[0x28] = 0;
+                patchedKernelBuffer[0x29] = 0xF0;
+                patchedKernelBuffer[0x2A] = 0x2B;
+                patchedKernelBuffer[0x2B] = 0;
+                patchedKernelBuffer[0x2C] = 0;
+                patchedKernelBuffer[0x2D] = 0;
+                patchedKernelBuffer[0x2E] = 0;
+                patchedKernelBuffer[0x2F] = 0;
+            }
+            else
+            {
+                throw new Exception("Unknown Surface Duo Product specified!");
+            }
 
             // Finally, we add in the total kernel image size because we need to jump over!
             uint kernelSize = (uint)patchedKernelBuffer.Length;
