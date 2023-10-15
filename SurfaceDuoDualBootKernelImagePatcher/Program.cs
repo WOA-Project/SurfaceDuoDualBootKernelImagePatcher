@@ -10,7 +10,7 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Surface Duo Dual Boot Kernel Image Patcher v2.0.0.0");
+            Console.WriteLine("Surface Duo Dual Boot Kernel Image Patcher v2.1.0.0");
             Console.WriteLine("Copyright (c) 2021-2023 The DuoWoA authors");
             Console.WriteLine();
 
